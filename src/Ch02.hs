@@ -34,18 +34,17 @@ insert message tree =
                 if ts > nts
                 then Node l m (insert message r)
                 else Node (insert message l) m r
+            _ -> tree
 
 build :: [LogMessage] -> MessageTree
-build = foldl (\t m -> insert m t) Leaf
+build = foldl (flip insert) Leaf
 
 inOrder :: MessageTree -> [LogMessage]
 inOrder tree =
   go tree []
   where
-    go t ret =
-      case t of
-        Leaf -> ret
-        Node l m r ->
+    go Leaf ret = ret
+    go (Node l m r) _ =
           inOrder l ++ (m : inOrder r)
 
 whatWentWrong :: [LogMessage] -> [String]
@@ -53,8 +52,8 @@ whatWentWrong ms =
   map errorMessage $ inOrder (build (filter severeError ms))
   where
     severeError :: LogMessage -> Bool
-    severeError m =
-      case m of
-        LogMessage (Error sev) _ _ -> sev >= 50
-        _ -> False
+    severeError (LogMessage (Error sev) _ _) = sev >= 50
+    severeError _ = False
+    errorMessage :: LogMessage -> String
     errorMessage (LogMessage _ _ s) = s
+    errorMessage _ = ""
