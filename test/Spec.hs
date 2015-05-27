@@ -30,3 +30,6 @@ main = hspec $ do
           ccInvalid = 4012888888881882
       validate ccValid `shouldBe` True
       validate ccInvalid `shouldBe` False
+  describe "hanoi" $ do
+    it "returns the steps need to move from peg a to b" $ do
+      hanoi 2 "a" "b" "c" `shouldBe` [("a", "c"), ("a", "b"), ("c", "b")]

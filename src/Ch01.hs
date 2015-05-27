@@ -4,6 +4,7 @@ module Ch01 (
   , doubleEveryOther
   , sumDigits
   , validate
+  , hanoi
   ) where
 
 toDigitsRev :: Integer -> [Integer]
@@ -31,3 +32,13 @@ sumDigits ints =
 validate :: Integer -> Bool
 validate int =
   (sumDigits . doubleEveryOther . toDigits) int `mod` 10 == 0
+
+type Peg = String
+type Move = (Peg, Peg)
+hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
+hanoi n a b c =
+  go n a b c []
+  where
+    go n x y temp ret
+      | n <= 0 = ret
+      | otherwise = hanoi (n-1) x temp y ++ ((x, y) : hanoi (n - 1) temp y x)
