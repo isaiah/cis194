@@ -41,3 +41,10 @@ foldTree =
                 Node (height left) left v r
           | otherwise =
                 Node (height l) l v (insert x r)
+
+xor :: [Bool] -> Bool
+xor =
+  foldl go False
+  where
+    go True True = False
+    go _ _ = True
