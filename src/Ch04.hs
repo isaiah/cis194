@@ -48,3 +48,10 @@ xor =
   where
     go True True = False
     go _ _ = True
+
+map' :: (a -> b) -> [a] -> [b]
+map' f =
+  foldr go []
+  where
+    go a l =
+      f a : l
