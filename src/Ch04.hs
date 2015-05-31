@@ -1,5 +1,7 @@
 module Ch04 where
 
+import Data.List (intersect)
+
 fun1 :: [Integer] -> Integer
 fun1 [] = 1
 fun1 (x:xs)
@@ -41,7 +43,7 @@ foldTree =
                 Node (height left) left v r
           | otherwise =
                 Node (height l) l v (insert x r)
-
+-- Exercise 3
 xor :: [Bool] -> Bool
 xor =
   foldl go False
@@ -55,3 +57,12 @@ map' f =
   where
     go a l =
       f a : l
+
+-- Exercise 4
+sieveSundaram :: Integer -> [Integer]
+sieveSundaram n =
+  map (\x -> x * 2 + 1) $ filter (`notElem` l'') l
+  where
+    l = [1..n]
+    l' = [(i, j) | i <- l, j <- l, i <= j, i + j + 2 * i * j <= n]
+    l'' = map (\(a, b) -> a + b + 2 * a * b) l'
