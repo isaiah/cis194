@@ -1,6 +1,6 @@
 module Ch05Spec where
 
-import Ch05
+import Ch05 hiding (Lit, Add, Mul)
 import ExprT
 import Parser
 import StackVM (stackVM, StackVal(..))
@@ -35,3 +35,13 @@ spec = do
   describe "compiler" $
     it "compiles to stack program" $
       stackVM <$> compile "(2+3)*4" `shouldBe` Just (Right (IVal 20))
+
+  describe "HasVars" $
+    it "could store and interpret variables" $ do
+      let env = [("x", 6)]
+          expr1 = add (lit 3) (var "x")
+          expr2 = add (lit 3) (var "y")
+          expr3 = mul (var "x") (add (var "y") (var "x"))
+      withVars env expr1 `shouldBe` Just 9
+      withVars env expr2 `shouldBe` Nothing
+      withVars [("x", 6), ("y", 3)] expr3 `shouldBe` Just 54

@@ -2,10 +2,12 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Ch05 where
 
-import           ExprT   (ExprT)
-import qualified ExprT   as ET
+import qualified Data.Map as M
+import           ExprT    (ExprT)
+import qualified ExprT    as ET
 import           Parser
 import           StackVM
+import qualified StackVM as VM
 
 -- Exercise 1
 eval :: ExprT -> Integer
@@ -64,11 +66,24 @@ instance Expr Mod7 where
 -- Exercise 5
 instance Expr Program where
   lit a = [PushI a]
-  mul a b = a ++ b ++ [Mul]
-  add a b = a ++ b ++ [Add]
+  mul a b = a ++ b ++ [VM.Mul]
+  add a b = a ++ b ++ [VM.Add]
 
 compile ::  String -> Maybe Program
 compile =
   parseExp lit add mul
 
 -- Exercise 6
+class HasVars a where
+  var :: String -> a
+
+instance HasVars (M.Map String Integer -> Maybe Integer) where
+  var = M.lookup
+
+instance Expr (M.Map String Integer -> Maybe Integer) where
+  lit x _ = Just x
+  add a b m = (+) <$> a m <*> b m
+  mul a b m = (*) <$> a m <*> b m
+
+withVars :: [(String, Integer)] -> (M.Map String Integer -> Maybe Integer) -> Maybe Integer
+withVars vs expr = expr $ M.fromList vs
