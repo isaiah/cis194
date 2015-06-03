@@ -24,11 +24,7 @@ moreFun gl1@(GL _ f1) gl2@(GL _ f2)
 
 -- Exercise 2
 treeFold :: Monoid b => (a -> [b] -> b) -> Tree a -> b
-treeFold f (Node a []) = f a []
 treeFold f (Node a subForest) = f a $ map (treeFold f) subForest
-
-combineGLs :: Employee -> [GuestList] -> GuestList
-combineGLs e@Emp{..} (x:xs) = undefined
 
 -- Exercise 3
 -- The first Guest list is the one with the employee, the the second is the one without
