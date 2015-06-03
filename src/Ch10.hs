@@ -61,12 +61,12 @@ first f p =
 
 instance Functor Parser where
   fmap a b = Parser f
-     where
-       f x =
-         case runParser b x of
-           Nothing -> Nothing
-           Just c ->
-             Just $ first a c
+    where
+      f x =
+        case runParser b x of
+          Nothing -> Nothing
+          Just c ->
+            Just $ first a c
 
 -- Exercise 2
 instance Applicative Parser where
@@ -75,9 +75,19 @@ instance Applicative Parser where
     where
       f xs =
         case runParser p1 xs of
-          Nothing     -> Nothing
+          Nothing -> Nothing
           Just (a, s) ->
             case runParser p2 s of
               Nothing -> Nothing
               Just (b, s') ->
                 Just (a b, s')
+
+-- Exercise 3
+abParser :: Parser (Char, Char)
+abParser = (\ x y -> (x, y)) <$> satisfy (== 'a') <*> satisfy (== 'b')
+
+abParser_ :: Parser()
+abParser_ = (\ _ _ -> ()) <$> satisfy (== 'a') <*> satisfy (== 'b')
+
+intPair :: Parser [Integer]
+intPair = (\ a _ b -> [a,b]) <$> posInt <*> satisfy (== ' ') <*> posInt
