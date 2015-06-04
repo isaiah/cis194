@@ -91,3 +91,16 @@ abParser_ = (\ _ _ -> ()) <$> satisfy (== 'a') <*> satisfy (== 'b')
 
 intPair :: Parser [Integer]
 intPair = (\ a _ b -> [a,b]) <$> posInt <*> satisfy (== ' ') <*> posInt
+
+-- Exercise 4
+instance Alternative Parser where
+  empty = Parser (const Nothing)
+  p1 <|> p2 = Parser f
+    where
+        f xs =
+          runParser p1 xs <|> runParser p2 xs
+
+
+-- Exercise 5
+intOrUppercase :: Parser ()
+intOrUppercase = const () <$> posInt <|> (const () <$> satisfy isUpper)
