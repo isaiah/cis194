@@ -100,7 +100,6 @@ instance Alternative Parser where
         f xs =
           runParser p1 xs <|> runParser p2 xs
 
-
 -- Exercise 5
 intOrUppercase :: Parser ()
 intOrUppercase = const () <$> posInt <|> (const () <$> satisfy isUpper)
